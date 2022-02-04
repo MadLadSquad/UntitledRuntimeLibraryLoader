@@ -9,4 +9,13 @@ The library has a macro called `URLL_USE_FUNCTIONAL` which can enable/disable a 
 #include "urll.h"
 ```
 ### Requirements
-As always on the library end, you should remove any name mangling from the C++ compiler by using `extern "C"` and compile in a position independent way
+As always on the library end, you should remove any name mangling from the C++ compiler by using `extern "C"` and compile in a position independent way, on windows add `__declspec(dllexport)` between your function type and name when declaring a function. Here is an example library header file:
+```cpp
+#pragma once
+
+extern "C"
+{
+	void __declspec(dllexport) begin();
+	void __declspec(dllexport) end();
+}
+```
