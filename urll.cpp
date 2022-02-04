@@ -1,14 +1,14 @@
 #include "urll.h"
 #include <iostream>
 
-void* URLL::dlopen(const char* location, Modes mode) noexcept
+void* URLL::dlopen(const char* location) noexcept
 {
+    // Due to restrictions from Windows libraries are always loaded in lazy mode!
 #ifdef _WIN32
     return (void*)LoadLibrary(location);
 #else
-    return ::dlopen(location, static_cast<int>(mode));
+    return ::dlopen(location, RTLD_LAZY);
 #endif
-    return nullptr;
 }
 
 void* URLL::dlsym(void* handle, const char* name) noexcept
@@ -44,7 +44,7 @@ char* URLL::dlerror() noexcept
     if (!len)
         return nullptr;
     str = std::string(buf, len);
-    std::cout << str[str.size() - 1] << std::endl;
+    
     LocalFree(buf);
     return str.data();
 #else
