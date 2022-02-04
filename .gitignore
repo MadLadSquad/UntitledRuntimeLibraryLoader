@@ -37,3 +37,4 @@ libtest.cpp
 libtest.hpp
 main.cpp
 .idea/
+build/

@@ -1,25 +1,20 @@
 #include "urll.h"
-#ifndef URLL_USE_FUNCTIONAL
-    #ifdef _WIN32
-        #include <windows.h>
-    #else
-        #include <dlfcn.h>
-    #endif
-#endif
+#include <iostream>
 
 void* URLL::dlopen(const char* location, Modes mode) noexcept
 {
 #ifdef _WIN32
-
+    return (void*)LoadLibrary(location);
 #else
     return ::dlopen(location, static_cast<int>(mode));
 #endif
+    return nullptr;
 }
 
 void* URLL::dlsym(void* handle, const char* name) noexcept
 {
 #ifdef _WIN32
-
+    return GetProcAddress((HINSTANCE)handle, name);
 #else
     return ::dlsym(handle, name);
 #endif
@@ -28,7 +23,8 @@ void* URLL::dlsym(void* handle, const char* name) noexcept
 int URLL::dlclose(void* handle) noexcept
 {
 #ifdef _WIN32
-
+    // Needed because Unix and Microsoft software go the oposite way when talking about errors
+    return (FreeLibrary((HINSTANCE)handle) == 0 ? -1 : 0);
 #else
     return ::dlclose(handle);
 #endif
@@ -37,7 +33,20 @@ int URLL::dlclose(void* handle) noexcept
 char* URLL::dlerror() noexcept
 {
 #ifdef _WIN32
+    // We use this in order to have it return an accurate value
+    static std::string str;
 
+    uint64_t ID = GetLastError();
+    if (ID == 0)
+        return nullptr;
+    char* buf = nullptr;
+    size_t len = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, ID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPTSTR>(&buf), 0, nullptr);
+    if (!len)
+        return nullptr;
+    str = std::string(buf, len);
+    std::cout << str[str.size() - 1] << std::endl;
+    LocalFree(buf);
+    return str.data();
 #else
     return ::dlerror();
 #endif
