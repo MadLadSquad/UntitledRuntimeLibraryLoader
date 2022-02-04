@@ -1,5 +1,4 @@
 #pragma once
-#define URLL_USE_FUNCTIONAL
 
 // Define this if you want to use std::function for easier function handling!
 #ifdef URLL_USE_FUNCTIONAL
