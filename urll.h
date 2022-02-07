@@ -15,19 +15,19 @@ namespace URLL
     void* dlopen(const char* location) noexcept;
 #ifdef URLL_USE_FUNCTIONAL
     template<typename T, typename... T2>
-    void* dlsym(void* handle, const char* name, std::function<T(T2&&...)>& function) noexcept
+    void* dlsym(void* handle, const char* name, std::function<T(T2...)>& function) noexcept
     {
 #ifdef _WIN32
         auto* ptr = GetProcAddress((HINSTANCE)handle, name);
 
-        T(*tmp)(T2&&...);
+        T(*tmp)(T2...);
         *(void**)(&tmp) = ptr;
         function = tmp;
         return (ptr == nullptr ? nullptr : handle);
 #else
         auto* ptr = ::dlsym(handle, name);
 
-        T(*tmp)(T2&&...);
+        T(*tmp)(T2...);
         *(void**)(&tmp) = ptr;
         function = tmp;
         return (ptr == nullptr ? nullptr : handle);
