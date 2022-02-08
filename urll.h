@@ -40,7 +40,7 @@ namespace URLL
 #ifdef _WIN32
         auto* ptr = GetProcAddress((HINSTANCE)handle, name);
         *(void**)(&function) = ptr;
-        return (ptr == nullptr ? nullptr : handle)
+        return (ptr == nullptr ? nullptr : handle);
 #else
         auto* ptr = ::dlsym(handle, name);
         *(void**)(&function) = ptr;
