@@ -19,33 +19,37 @@ namespace URLL
     {
 #ifdef _WIN32
         auto* ptr = GetProcAddress((HINSTANCE)handle, name);
-
-        T(*tmp)(T2...);
-        *(void**)(&tmp) = ptr;
-        function = tmp;
-        return (ptr == nullptr ? nullptr : handle);
 #else
         auto* ptr = ::dlsym(handle, name);
-
+#endif
         T(*tmp)(T2...);
         *(void**)(&tmp) = ptr;
         function = tmp;
         return (ptr == nullptr ? nullptr : handle);
-#endif
     }
 #endif
+
     template<typename T>
-    void* dlsym(void* handle, const char* name, T& function) noexcept
+    void* dlsym_val(void* handle, const char* name, T* var) noexcept
     {
 #ifdef _WIN32
-        auto* ptr = GetProcAddress((HINSTANCE)handle, name);
-        *(void**)(&function) = ptr;
-        return (ptr == nullptr ? nullptr : handle);
+        var = (T*)GetProcAddress((HINSTANCE)handle, name);
 #else
-        auto* ptr = ::dlsym(handle, name);
-        *(void**)(&function) = ptr;
-        return (ptr == nullptr ? nullptr : handle);
+        var = (T*)::dlsym(handle, name);
 #endif
+        return (var == nullptr ? nullptr : handle);
+    }
+
+
+    template<typename T>
+    void* dlsym_func(void* handle, const char* name, T& var) noexcept
+    {
+#ifdef _WIN32
+        *(void**)(&var) = GetProcAddress((HINSTANCE)handle, name);
+#else
+        *(void**)(&var) = ::dlsym(handle, name);
+#endif
+        return (var == nullptr ? nullptr : handle);
     }
 
     void* dlsym(void* handle, const char* name) noexcept;
