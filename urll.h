@@ -10,9 +10,23 @@
     #include <dlfcn.h>
 #endif
 
+#ifdef UVK_LOG_EXPORT_FROM_LIBRARY
+    #ifdef _WIN32
+        #ifdef UVK_LIB_COMPILE
+            #define UVK_PUBLIC_API __declspec(dllexport)
+        #else
+            #define UVK_PUBLIC_API __declspec(dllimport)
+        #endif
+    #else
+        #define UVK_PUBLIC_API
+    #endif
+#else
+    #define UVK_PUBLIC_API
+#endif
+
 namespace URLL
 {
-    void* dlopen(const char* location) noexcept;
+    UVK_PUBLIC_API void* dlopen(const char* location) noexcept;
 #ifdef URLL_USE_FUNCTIONAL
     template<typename T, typename... T2>
     void* dlsym(void* handle, const char* name, std::function<T(T2...)>& function) noexcept
@@ -52,11 +66,11 @@ namespace URLL
         return (var == nullptr ? nullptr : handle);
     }
 
-    void* dlsym(void* handle, const char* name) noexcept;
+    UVK_PUBLIC_API void* dlsym(void* handle, const char* name) noexcept;
 
     // returns 0 on success, everything else must be an error
-    int dlclose(void* handle) noexcept;
+    UVK_PUBLIC_API int dlclose(void* handle) noexcept;
 
     // returns a string with the corresponding error, if there is no error it returns null
-    char* dlerror() noexcept;
+    UVK_PUBLIC_API char* dlerror() noexcept;
 }
