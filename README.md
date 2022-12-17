@@ -6,13 +6,23 @@
 A cross platform runtime shared object loader(windows and unix).
 
 ## Installation an usage
-The library is the `urll.cpp` and `urll.h` files, compile them into your project you're good to go. The library provides a Unix-like version of the `dlopen`, `dlsym`, `dlerror` and `dlclose` functions and they work in pretty much the same way but are abstracted to also work on windows. The functions can be found under the `URLL` namespace. An example can be found [here](https://github.com/MadLadSquad/UntitledVulkanGameEngine/wiki/%5BEU%5D-Loading-Dynamic-Shared-libraries-at-runtime#functions).
+### Installation
+The library is the `urll.cpp` and `urll.h` files, compile them into your project you're good to go. 
+
+Additionally a C API exists, you can add it by compiling `curll.h` and `curll.cpp`.
+Functions in the C API are the same as the C++ ones but are prefixed with `urll_`
+
+### Usage
+The library provides a Unix-like version of the `dlopen`, `dlsym`, `dlerror` and `dlclose` functions
+and they work in pretty much the same way but are abstracted to also work on Windows. The functions can be
+found under the `URLL` namespace. An example can be found [here](https://github.com/MadLadSquad/UntitledVulkanGameEngine/wiki/%5BEU%5D-Loading-Dynamic-Shared-libraries-at-runtime#functions).
 
 The library has a macro called `URLL_USE_FUNCTIONAL` which can enable/disable a version of `dlsym` that supports `std::function`. All you need to do is define it with like this:
 ```cpp
 #define URLL_USE_FUNCTIONAL
 #include "urll.h"
 ```
+For Unix systems you need to link to the `dl` library in order to use it
 
 ### Requirements
 As always on the library end, you should remove any name mangling from the C++ compiler by using `extern "C"` and compile in a position independent way, on windows add `__declspec(dllexport)` between your function type and name when declaring a function. Here is an example library header file:
