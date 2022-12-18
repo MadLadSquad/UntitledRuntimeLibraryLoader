@@ -1,5 +1,4 @@
 #include "urll.h"
-#include <iostream>
 
 void* URLL::dlopen(const char* location) noexcept
 {

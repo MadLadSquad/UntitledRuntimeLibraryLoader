@@ -29,7 +29,7 @@ namespace URLL
     UVK_PUBLIC_API void* dlopen(const char* location) noexcept;
 #ifdef URLL_USE_FUNCTIONAL
     template<typename T, typename... T2>
-    void* dlsym(void* handle, const char* name, std::function<T(T2...)>& function) noexcept
+    UVK_PUBLIC_API void* dlsym(void* handle, const char* name, std::function<T(T2...)>& function) noexcept
     {
 #ifdef _WIN32
         auto* ptr = GetProcAddress((HINSTANCE)handle, name);
@@ -44,7 +44,7 @@ namespace URLL
 #endif
 
     template<typename T>
-    void* dlsym_val(void* handle, const char* name, T* var) noexcept
+    UVK_PUBLIC_API void* dlsym_val(void* handle, const char* name, T* var) noexcept
     {
 #ifdef _WIN32
         var = (T*)GetProcAddress((HINSTANCE)handle, name);
@@ -56,7 +56,7 @@ namespace URLL
 
 
     template<typename T>
-    void* dlsym_func(void* handle, const char* name, T& var) noexcept
+    UVK_PUBLIC_API void* dlsym_func(void* handle, const char* name, T& var) noexcept
     {
 #ifdef _WIN32
         *(void**)(&var) = GetProcAddress((HINSTANCE)handle, name);

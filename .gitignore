@@ -31,10 +31,11 @@
 *.out
 *.app
 
-cmake-build-debug/
+cmake-build-*/
 CMakeLists.txt
 libtest.cpp
 libtest.hpp
 main.cpp
+main.c
 .idea/
 build/
