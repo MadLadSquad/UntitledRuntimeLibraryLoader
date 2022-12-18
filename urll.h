@@ -14,28 +14,32 @@
     #ifdef _WIN32
         #ifdef UVK_LIB_COMPILE
             #define UVK_PUBLIC_API __declspec(dllexport)
+            #define UVK_PUBLIC_TMPL_API __declspec(dllexport)
         #else
             #define UVK_PUBLIC_API __declspec(dllimport)
+            #define UVK_PUBLIC_TMPL_API
         #endif
     #else
         #define UVK_PUBLIC_API
+        #define UVK_PUBLIC_TMPL_API
     #endif
 #else
     #define UVK_PUBLIC_API
+    #define UVK_PUBLIC_TMPL_API
 #endif
 
 namespace URLL
 {
     UVK_PUBLIC_API void* dlopen(const char* location) noexcept;
+
+    UVK_PUBLIC_API void* dlsym(void* handle, const char* name) noexcept;
+
 #ifdef URLL_USE_FUNCTIONAL
     template<typename T, typename... T2>
-    UVK_PUBLIC_API void* dlsym(void* handle, const char* name, std::function<T(T2...)>& function) noexcept
+    UVK_PUBLIC_TMPL_API void* dlsym(void* handle, const char* name, std::function<T(T2...)>& function) noexcept
     {
-#ifdef _WIN32
-        auto* ptr = GetProcAddress((HINSTANCE)handle, name);
-#else
-        auto* ptr = ::dlsym(handle, name);
-#endif
+        void* ptr = dlsym(handle, name);
+
         T(*tmp)(T2...);
         *(void**)(&tmp) = ptr;
         function = tmp;
@@ -44,29 +48,18 @@ namespace URLL
 #endif
 
     template<typename T>
-    UVK_PUBLIC_API void* dlsym_val(void* handle, const char* name, T* var) noexcept
+    UVK_PUBLIC_TMPL_API void* dlsym_val(void* handle, const char* name, T* var) noexcept
     {
-#ifdef _WIN32
-        var = (T*)GetProcAddress((HINSTANCE)handle, name);
-#else
-        var = (T*)::dlsym(handle, name);
-#endif
+        var = (T*)dlsym(handle, name);
         return (var == nullptr ? nullptr : handle);
     }
-
 
     template<typename T>
-    UVK_PUBLIC_API void* dlsym_func(void* handle, const char* name, T& var) noexcept
+    UVK_PUBLIC_TMPL_API void* dlsym_func(void* handle, const char* name, T& var) noexcept
     {
-#ifdef _WIN32
-        *(void**)(&var) = GetProcAddress((HINSTANCE)handle, name);
-#else
-        *(void**)(&var) = ::dlsym(handle, name);
-#endif
+        *(void**)(var) = dlsym(handle, name);
         return (var == nullptr ? nullptr : handle);
     }
-
-    UVK_PUBLIC_API void* dlsym(void* handle, const char* name) noexcept;
 
     // returns 0 on success, everything else must be an error
     UVK_PUBLIC_API int dlclose(void* handle) noexcept;
