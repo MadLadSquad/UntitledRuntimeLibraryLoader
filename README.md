@@ -5,4 +5,4 @@
 
 A cross-platform runtime shared object loader(windows and unix).
 
-Docs and learning resources can be found on the wiki page [here](https://github.com/MadLadSquad/UntitledRuntimeLibraryLoader/wiki)
+Docs and learning resources can be found on the wiki page [here](https://github.com/MadLadSquad/UntitledRuntimeLibraryLoader/wiki).
