@@ -21,10 +21,10 @@ extern "C"
         return (*function == nullptr ? nullptr : handle);
     }
 
-    void* urll_dlsym_var(void* handle, const char* name, void* var)
+    void* urll_dlsym_var(void* handle, const char* name, void** var)
     {
-         var = URLL::dlsym(handle, name);
-         return (var == nullptr ? nullptr : handle);
+         *var = URLL::dlsym(handle, name);
+         return (*var == nullptr ? nullptr : handle);
     }
 
     int urll_dlclose(void* handle)

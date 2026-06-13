@@ -26,7 +26,7 @@ extern "C"
     // UntitledImGuiFramework Event Safety - Any time
     MLS_PUBLIC_API void* urll_dlsym_func(void* handle, const char* name, void** function);
     // UntitledImGuiFramework Event Safety - Any time
-    MLS_PUBLIC_API void* urll_dlsym_var(void* handle, const char* name, void* var);
+    MLS_PUBLIC_API void* urll_dlsym_var(void* handle, const char* name, void** var);
 
     // UntitledImGuiFramework Event Safety - Any time
     MLS_PUBLIC_API int urll_dlclose(void* handle);

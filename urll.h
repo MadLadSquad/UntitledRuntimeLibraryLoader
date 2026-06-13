@@ -48,7 +48,7 @@ namespace URLL
 
     // UntitledImGuiFramework Event Safety - Any time
     template<typename T>
-    void* dlsym_val(void* handle, const char* name, T* var) noexcept
+    void* dlsym_var(void* handle, const char* name, T*& var) noexcept
     {
         var = (T*)dlsym(handle, name);
         return (var == nullptr ? nullptr : handle);
@@ -58,7 +58,7 @@ namespace URLL
     template<typename T>
     void* dlsym_func(void* handle, const char* name, T& var) noexcept
     {
-        *(void**)(var) = dlsym(handle, name);
+        *(void**)(&var) = dlsym(handle, name);
         return (var == nullptr ? nullptr : handle);
     }
 
