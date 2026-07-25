@@ -39,3 +39,6 @@ main.cpp
 main.c
 .idea/
 build/
+graphify-out/
+.agents/
+.claude/

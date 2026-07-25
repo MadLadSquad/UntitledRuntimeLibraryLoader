@@ -26,9 +26,14 @@
 
 namespace URLL
 {
+    // Libraries are always loaded in lazy mode. A null location returns a handle to the main
+    // program, on Windows too, but there it only resolves symbols exported by the executable
+    // itself, not by the libraries it links against
     // UntitledImGuiFramework Event Safety - Any time
     MLS_PUBLIC_API void* dlopen(const char* location) noexcept;
 
+    // A null handle is not supported. On glibc it happens to search every loaded library, since
+    // RTLD_DEFAULT is null there, but Windows offers no cheap equivalent and simply fails
     // UntitledImGuiFramework Event Safety - Any time
     MLS_PUBLIC_API void* dlsym(void* handle, const char* name) noexcept;
 
@@ -66,7 +71,9 @@ namespace URLL
     // UntitledImGuiFramework Event Safety - Any time
     MLS_PUBLIC_API int dlclose(void* handle) noexcept;
 
-    // returns a string with the corresponding error, if there is no error it returns null
+    // returns a string with the corresponding error, if there is no error it returns null. Reading
+    // the error clears it, so 2 calls in a row will always report null the second time. The buffer
+    // is owned by the calling thread and is invalidated by that thread's next dlerror() call
     // UntitledImGuiFramework Event Safety - Any time
     MLS_PUBLIC_API char* dlerror() noexcept;
 }
